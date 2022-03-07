@@ -6,24 +6,22 @@ pipeline {
     stages {
         stage('Checkout from Git') {
             steps {
-                git branch: 'main', url: 'https://github.com/chucklapress/flask_wsgi_scrap'
+                git branch: 'master', url: 'https://github.com/chucklapress/portfolio'
             }
         }
         stage ('Get Directory') {
             steps {
-                    echo "$WORKSPACE"
-                    sh 'mkdir archive'
-                    sh 'cp -r  favicons readme.md requirements.txt templates webscraper.py  archive'
-                    zip zipFile: 'archive/Repo.zip', archive: false, dir: 'archive'
-                    archiveArtifacts artifacts: 'archive/*.zip', fingerprint: true
+              zip zipFile: 'repo.zip', archive: true, exclude: 'db.sqlite3, README.md'
+              // first argument is zipfile name, second argument leave artifact on server
+              // third argument is list of files to exclude from zip package
             }
+          }
         }
-    }
-    post {
-        always {
+        post {
+          always {
             script {
-                deleteDir()
+              deleteDir()
             }
+          }
         }
-    }
-}
+      }
